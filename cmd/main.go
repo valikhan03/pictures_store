@@ -10,8 +10,8 @@ import (
 )
 
 func main() {
-	fileServer := http.FileServer(http.Dir("./static/"))
-	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
+	fileServer := http.FileServer(http.Dir("./templates/static/"))
+	http.Handle("/templates/static/", http.StripPrefix("/templates/static/", fileServer))
 
 	http.HandleFunc("/resource", MyFilesHandler)
 	http.HandleFunc("/img", ImageStorageHandler)
@@ -21,7 +21,7 @@ func main() {
 
 func MyFilesHandler(resW http.ResponseWriter, req *http.Request) {
 	var err error
-	tmp, err := template.ParseFiles("index.htm")
+	tmp, err := template.ParseFiles("templates/index.htm")
 	if err != nil {
 
 		log.Println(err)
