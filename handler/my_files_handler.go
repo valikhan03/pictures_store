@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func MyFilesHandler(resW http.ResponseWriter, req *http.Request) {
+func (h *Handler) MyFilesHandler(resW http.ResponseWriter, req *http.Request) {
 	tmp, err := template.ParseFiles("templates/index/index.htm")
 	if err != nil {
 

@@ -6,7 +6,7 @@ import(
 	"io/ioutil"
 )
 
-func ImageStorageHandler(resW http.ResponseWriter, req *http.Request) {
+func (h *Handler) ImageStorageHandler(resW http.ResponseWriter, req *http.Request) {
 	if req.Method == http.MethodGet {
 		imgName := req.URL.Query().Get("image")
 		imgFile, err := ioutil.ReadFile("img_storage/" + imgName)
