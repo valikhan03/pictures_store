@@ -1,7 +1,8 @@
 package repository
 
 import (
-	"fmt"
+	
+	
 	"log"
 	"picturestore/entity"
 
@@ -29,7 +30,7 @@ func (a *AuthRepository) NewUser(userdata entity.User) error {
 
 func (a *AuthRepository) FindUser(userdata entity.SignInInput) (entity.User, error) {
 	var user entity.User
-	query := fmt.Sprintf("select * from ____ where email=$1 and password=$2", userdata.Email, userdata.Password)
+	query := "select * from ____ where email=$1 and password=$2"
 
 	err := a.DB.Get(&user, query, userdata.Email, userdata.Password)
 	if err != nil {
