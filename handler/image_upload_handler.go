@@ -8,7 +8,7 @@ import (
 
 func (h *Handler) ImageUploadHandler(resW http.ResponseWriter, req *http.Request) {
 	if req.Method == http.MethodPost {
-		req.ParseMultipartForm(32 << 20)
+		req.ParseMultipartForm(32 << 20) //32mb
 		files := req.MultipartForm.File["file-upload"]
 
 		for _, fileheader := range files {

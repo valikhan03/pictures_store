@@ -1,9 +1,14 @@
 package entity
 
+import (
+	"github.com/google/uuid"
+)
+
 type User struct {
-	Email    string `json:"email"`
-	Username string `json:"username"`
-	Password string `json:"password"`
+	UserID   uuid.UUID `json:"user_id"`
+	Email    string    `json:"email"`
+	Username string    `json:"username"`
+	Password string    `json:"password"`
 }
 
 type SignInInput struct {
