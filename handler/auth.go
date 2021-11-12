@@ -47,6 +47,7 @@ func (h *Handler) SignIn(resW http.ResponseWriter, req *http.Request){
 		cookie := http.Cookie{
 			Name: "token-auth",
 			Value: token,
+			Path: "/app",
 		}
 
 		http.SetCookie(resW, &cookie)
