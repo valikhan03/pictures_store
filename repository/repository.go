@@ -7,6 +7,7 @@ import (
 
 type Auth interface{
 	NewUser(userdata entity.User) error
+	FindUser(userdata entity.SignInInput) (entity.User, error)
 }
 
 type Upload interface{

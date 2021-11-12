@@ -36,5 +36,21 @@ func (h *Handler) SignIn(resW http.ResponseWriter, req *http.Request){
 		if err != nil{
 			log.Fatal(err)
 		}
+
+		token, err := h.service.Auth.GenerateToken(userdata)
+		if err != nil{
+			resW.Write([]byte("Authorization error"))
+			log.Fatal(err)
+			return
+		}
+
+		cookie := http.Cookie{
+			Name: "token-auth",
+			Value: token,
+		}
+
+		http.SetCookie(resW, &cookie)
+
+		
 	}
 }

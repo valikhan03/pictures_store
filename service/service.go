@@ -4,10 +4,14 @@ import(
 	"mime/multipart"
 	"picturestore/repository"
 	"picturestore/entity"
+
+	"github.com/google/uuid"
 )
 
 type Auth interface{
 	SignUp(userdata entity.User) error
+	GenerateToken(userdata entity.SignInInput) (string, error)
+	ParseToken(access_token string) (uuid.UUID, error)
 }
 
 type Upload interface{
