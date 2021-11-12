@@ -5,7 +5,7 @@ import (
 )
 
 type User struct {
-	UserID   uuid.UUID `json:"user_id"`
+	UserID   uuid.UUID `json:"user_id" db:"user_id"`
 	Email    string    `json:"email"`
 	Username string    `json:"username"`
 	Password string    `json:"password"`

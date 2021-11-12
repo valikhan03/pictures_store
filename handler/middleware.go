@@ -1,8 +1,9 @@
 package handler
 
 import(
+	//"log"
 	"net/http"
-	"github.com/gorilla/sessions"
+	//"github.com/gorilla/sessions"
 )
 
 func (h *Handler) identifyUser(next http.Handler) http.Handler{
@@ -24,14 +25,16 @@ func (h *Handler) identifyUser(next http.Handler) http.Handler{
 			return
 		}
 
-		userID, err := h.service.Auth.ParseToken(tokenStr)
+		user_id, err := h.service.Auth.ParseToken(tokenStr)
 		if err != nil{
 			resW.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 
-		sessions.NewSession()
-		
+		http.SetCookie(resW, &http.Cookie{
+			Name: "userID",
+			Value: user_id.String(),
+		})
 
 		next.ServeHTTP(resW, req)
 	})

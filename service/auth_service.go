@@ -23,9 +23,8 @@ func NewAuthService(repos repository.Auth) *AuthService {
 
 const (
 	tokenET = 5 * time.Minute //token expiration time
-	key     = "vfdnjkvbhzjlkjca;nbhcibguiv;hvj/vnal/"
+	key     = "vfdnjkvbhzjlkj"
 )
-
 type tokenClaims struct {
 	jwt.StandardClaims
 	UserID uuid.UUID `json:"user_id"`
@@ -53,9 +52,9 @@ func (a *AuthService) GenerateToken(userdata entity.SignInInput) (string, error)
 		user.UserID,
 	})
 
-	tokenStr, err := token.SignedString(key)
+	tokenStr, err := token.SignedString([]byte(key))
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("KEY ERROR", err)
 	}
 	return tokenStr, err
 }
