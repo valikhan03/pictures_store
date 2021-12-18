@@ -4,12 +4,10 @@ import (
 	"picturestore/service"
 
 	"github.com/gorilla/mux"
-	"github.com/gorilla/sessions"
 )
 
 type Handler struct {
 	service      *service.Service
-	sessionStore *sessions.Store
 }
 
 func NewHandler(service *service.Service) *Handler {
@@ -26,7 +24,7 @@ func (h *Handler) InitRoutes() *mux.Router {
 	app.Use(h.identifyUser)
 	app.HandleFunc("/resource", h.MyFilesHandler)
 	app.HandleFunc("/img", h.ImageStorageHandler)
-	app.HandleFunc("/addimg", h.ImageUploadHandler)
+	app.HandleFunc("/add-img", h.ImageUploadHandler)
 
 	return router
 }

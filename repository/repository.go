@@ -1,8 +1,11 @@
 package repository
 
 import (
+	"io"
 	"picturestore/entity"
+
 	"github.com/jmoiron/sqlx"
+	"github.com/minio/minio-go/v7"
 )
 
 type Auth interface{
@@ -11,17 +14,18 @@ type Auth interface{
 }
 
 type Upload interface{
-
+	UploadOne(user_id string, filename string, file io.Reader, size int64) error
 }
+
 
 type Repository struct {
 	Auth
 	Upload
 }
 
-func NewRepository(db *sqlx.DB) *Repository {
+func NewRepository(db *sqlx.DB, cl *minio.Client ) *Repository {
 	return &Repository{
-		Auth: NewAuthRepository(db),
-		Upload: NewUploadRepository(db),
+		Auth:NewAuthRepository(db),
+		Upload: NewUploadRespository(cl),
 	}
 }

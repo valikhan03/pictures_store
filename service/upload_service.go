@@ -18,7 +18,7 @@ func NewUploadService(repos repository.Upload) *UploadService{
 	}
 }
 
-func (u *UploadService) UploadFile(filename string, file multipart.File) error {
+func (u *UploadService) UploadFile(userid string, filename string, file multipart.File, size int64) error {
 	dst, err := os.Create("img_storage/" + filename)
 	if err != nil {
 		log.Fatal(err)
@@ -28,6 +28,8 @@ func (u *UploadService) UploadFile(filename string, file multipart.File) error {
 	if _, err := io.Copy(dst, file); err != nil {
 		log.Fatal(err)
 	}
+
+	err = u.repos.UploadOne(userid, filename, file, size)
 
 	return err
 }

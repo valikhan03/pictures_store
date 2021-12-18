@@ -15,7 +15,7 @@ type Auth interface{
 }
 
 type Upload interface{
-	UploadFile(filename string, file multipart.File) error
+	UploadFile(userid string, filename string, file multipart.File, size int64) error
 }
 
 type Service struct{

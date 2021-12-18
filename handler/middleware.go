@@ -10,11 +10,11 @@ func (h *Handler) identifyUser(next http.Handler) http.Handler{
 	return http.HandlerFunc(func(resW http.ResponseWriter, req *http.Request){
 		
 		cookies := req.Cookies()
-		var tokenCookie http.Cookie
+		var tokenCookie *http.Cookie
 
 		for _, cookie := range cookies{
-			if(cookie.Name == "token-auth"){
-				tokenCookie = *cookie
+			if(cookie.Name == "access-token"){
+				tokenCookie = cookie
 			}
 		}
 
@@ -25,16 +25,11 @@ func (h *Handler) identifyUser(next http.Handler) http.Handler{
 			return
 		}
 
-		user_id, err := h.service.Auth.ParseToken(tokenStr)
+		_, err := h.service.Auth.ParseToken(tokenStr)
 		if err != nil{
 			resW.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-
-		http.SetCookie(resW, &http.Cookie{
-			Name: "userID",
-			Value: user_id.String(),
-		})
 
 		next.ServeHTTP(resW, req)
 	})

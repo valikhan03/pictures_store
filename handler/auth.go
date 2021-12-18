@@ -45,13 +45,11 @@ func (h *Handler) SignIn(resW http.ResponseWriter, req *http.Request){
 		}
 
 		cookie := http.Cookie{
-			Name: "token-auth",
+			Name: "access-token",
 			Value: token,
 			Path: "/app",
 		}
 
 		http.SetCookie(resW, &cookie)
-
-		
 	}
 }
