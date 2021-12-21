@@ -7,7 +7,7 @@ import (
 	"picturestore/service"
 	"picturestore/handler"
 
-	_ "github.com/lib/pq"
+	_ "github.com/jackc/pgx/stdlib"
 )
 
 func main() {
@@ -15,6 +15,9 @@ func main() {
 	http.Handle("/templates/static/", http.StripPrefix("/templates/static/", fileServer))
 
 	db, err := repository.NewPostgresDB()
+	if err != nil{
+		log.Fatalf("DB conn error - %s", err.Error())
+	}
 	minio_client := repository.NewMinIOStorage()
 	if err != nil{
 		log.Fatal(err)

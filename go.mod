@@ -7,6 +7,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/sessions v1.2.1 // indirect
+	github.com/jackc/pgx v3.6.2+incompatible // indirect
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -16,6 +17,7 @@ require (
 	github.com/minio/md5-simd v1.1.2 // indirect
 	github.com/minio/minio-go/v7 v7.0.18 // indirect
 	github.com/minio/sha256-simd v1.0.0 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rs/xid v1.3.0 // indirect
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3 // indirect
 	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f // indirect

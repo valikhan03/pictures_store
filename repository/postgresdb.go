@@ -8,6 +8,7 @@ import (
 	"log"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/joho/godotenv"
 
 	"gopkg.in/yaml.v2"
 )
@@ -23,7 +24,6 @@ type PostgresDBConfigs struct {
 
 const (
 	postgresConfigFile = "configs/postgresconfs.yaml"
-	passwordFile = "configs/dbpassword.yaml"
 )
 
 func GetPostgresDBConfigs() PostgresDBConfigs {
@@ -39,22 +39,21 @@ func GetPostgresDBConfigs() PostgresDBConfigs {
 		log.Fatal(err)
 	}
 
-	passwFile, err := ioutil.ReadFile(passwordFile)
-	if err != nil{
-		log.Fatal(err)
-	}
-
-	err = yaml.Unmarshal(passwFile, &configs)
-
 	return configs
 }
 
 func NewPostgresDB() (*sqlx.DB, error) {
 	var confs PostgresDBConfigs
+
+	err := godotenv.Load()
+	if err != nil{
+		log.Printf("Error loading .env file : %s", err.Error())
+	}
+
 	confs = GetPostgresDBConfigs()
 	password := os.Getenv("POSTGRESDB_PASSWORD")
 	
-	db, err := sqlx.Open("postgres", fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s",
+	db, err := sqlx.Open("pgx", fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s",
 		confs.Host, confs.Port, confs.DBName, confs.Username, password, confs.SSLMode))
 	if err != nil {
 		return nil, err
