@@ -5,28 +5,29 @@ import(
 	"picturestore/repository"
 	"picturestore/entity"
 
-	"github.com/google/uuid"
 )
 
 type Auth interface{
-	SignUp(userdata entity.User) error
+	SignUp(userdata entity.User) (string, error)
 	GenerateToken(userdata entity.SignInInput) (string, error)
-	ParseToken(access_token string) (uuid.UUID, error)
+	ParseToken(access_token string) (string, error)
 }
 
-type Upload interface{
+type Storage interface{
 	UploadFile(userid string, filename string, file multipart.File, size int64) error
+	NewUserBucket(user_id string) error 
+	GetFile(user_id string, filename string) ([]byte, error)
 }
 
 type Service struct{
-	Upload
+	Storage
 	Auth
 }
 
 
 func NewService(repository *repository.Repository) *Service{
 	return &Service{
-		Upload: NewUploadService(repository.Upload),
+		Storage: NewStorageService(repository.Storage),
 		Auth: NewAuthService(repository.Auth),
 	}
 }

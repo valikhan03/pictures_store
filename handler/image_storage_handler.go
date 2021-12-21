@@ -3,12 +3,11 @@ package handler
 import(
 	"log"
 	"net/http"
-	"io/ioutil"
 )
 
 func (h *Handler) ImageStorageHandler(resW http.ResponseWriter, req *http.Request) {
 	if req.Method == http.MethodGet {
-		/*
+		
 		cookie, err := req.Cookie("access-token")
 		if err != nil{
 			log.Println(err)
@@ -18,15 +17,13 @@ func (h *Handler) ImageStorageHandler(resW http.ResponseWriter, req *http.Reques
 		if err != nil{
 			log.Println(err)
 		}
-		*/
 		
-
-		imgName := req.URL.Query().Get("image")
-		imgFile, err := ioutil.ReadFile("img_storage/" + imgName)
-		if err != nil {
-			resW.WriteHeader(404)
-			resW.Write([]byte(`<h1>File not found :(</h1>`))
+		filename := req.URL.Query().Get("image")
+		imgFile, err := h.service.GetFile(userID, filename)
+		if err != nil{
 			log.Println(err)
+			resW.WriteHeader(http.StatusInternalServerError)
+			return
 		}
 
 		resW.Write(imgFile)

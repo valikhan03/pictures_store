@@ -15,11 +15,12 @@ func main() {
 	http.Handle("/templates/static/", http.StripPrefix("/templates/static/", fileServer))
 
 	db, err := repository.NewPostgresDB()
+	minio_client := repository.NewMinIOStorage()
 	if err != nil{
 		log.Fatal(err)
 	}
 	
-	repositories := repository.NewRepository(db)
+	repositories := repository.NewRepository(db, minio_client)
 	services := service.NewService(repositories)
 	handlers := handler.NewHandler(services)
 	server := &http.Server{

@@ -24,9 +24,9 @@ func (h *Handler) ImageUploadHandler(resW http.ResponseWriter, req *http.Request
 			file, err := fileheader.Open()
 			size := fileheader.Size
 			
-			err = h.service.Upload.UploadFile(userID.String() ,fileheader.Filename, file, size)
+			err = h.service.Storage.UploadFile(userID ,fileheader.Filename, file, size)
 			if err != nil {
-				log.Fatal(err)
+				log.Println(err)
 			}
 			defer file.Close()
 		}

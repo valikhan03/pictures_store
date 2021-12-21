@@ -8,24 +8,25 @@ import (
 	"github.com/minio/minio-go/v7"
 )
 
-type Auth interface{
+type Auth interface {
 	NewUser(userdata entity.User) error
 	FindUser(userdata entity.SignInInput) (entity.User, error)
 }
 
-type Upload interface{
+type Storage interface {
+	GetFile(user_id, filename string) ([]byte, error)
 	UploadOne(user_id string, filename string, file io.Reader, size int64) error
+	MakeBucket(user_id string) error
 }
-
 
 type Repository struct {
 	Auth
-	Upload
+	Storage
 }
 
-func NewRepository(db *sqlx.DB, cl *minio.Client ) *Repository {
+func NewRepository(db *sqlx.DB, cl *minio.Client) *Repository {
 	return &Repository{
-		Auth:NewAuthRepository(db),
-		Upload: NewUploadRespository(cl),
+		Auth:    NewAuthRepository(db),
+		Storage: NewStorageRepository(cl),
 	}
 }

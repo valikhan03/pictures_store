@@ -27,15 +27,21 @@ const (
 )
 type tokenClaims struct {
 	jwt.StandardClaims
-	UserID uuid.UUID `json:"user_id"`
+	UserID string `json:"user_id"`
 }
 
-func (a *AuthService) SignUp(userdata entity.User) error {
-	err := a.repos.NewUser(userdata)
+func (a *AuthService) SignUp(userdata entity.User) (string, error) {
+	id, err := uuid.NewRandom()
+	if err != nil{
+		log.Println(err)
+		return "", err
+	}
+	userdata.UserID = id.String()
+	err = a.repos.NewUser(userdata)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return err
+	return id.String(), err
 }
 
 func (a *AuthService) GenerateToken(userdata entity.SignInInput) (string, error) {
@@ -59,7 +65,7 @@ func (a *AuthService) GenerateToken(userdata entity.SignInInput) (string, error)
 	return tokenStr, err
 }
 
-func (a *AuthService) ParseToken(access_token string) (uuid.UUID, error) {
+func (a *AuthService) ParseToken(access_token string) (string, error) {
 	token, err := jwt.ParseWithClaims(access_token, &tokenClaims{}, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("Invalid signing method")
@@ -73,7 +79,7 @@ func (a *AuthService) ParseToken(access_token string) (uuid.UUID, error) {
 
 	cliams, ok := token.Claims.(*tokenClaims)
 	if !ok {
-		return uuid.Nil, errors.New("token claims error")
+		return "", errors.New("token claims error")
 	}
 
 	return cliams.UserID, nil

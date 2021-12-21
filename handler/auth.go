@@ -13,16 +13,22 @@ func (h *Handler) SignUp(resW http.ResponseWriter, req *http.Request){
 		decoder := json.NewDecoder(req.Body)
 		err := decoder.Decode(&userdata)
 		if err != nil{
-			log.Fatal(err)
+			log.Println(err)
+			resW.WriteHeader(http.StatusBadRequest)
+			return
 		}
 
-		err = h.service.Auth.SignUp(userdata)
+		user_id, err := h.service.Auth.SignUp(userdata)
 		if err != nil{
-			log.Fatal(err)
+			log.Println(err)
 			resW.WriteHeader(http.StatusInternalServerError)
 			resW.Write([]byte("Internal Server Error"))
+			return
 		}
-
+		err = h.service.Storage.NewUserBucket(user_id)
+		if err != nil{
+			log.Println(err)
+		}
 		resW.WriteHeader(http.StatusOK)
 	}
 }
