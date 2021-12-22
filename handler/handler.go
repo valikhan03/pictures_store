@@ -18,13 +18,21 @@ func NewHandler(service *service.Service) *Handler {
 
 func (h *Handler) InitRoutes() *mux.Router {
 	router := mux.NewRouter()
-	router.HandleFunc("/sign-up", h.SignUp)
-	router.HandleFunc("/sign-in", h.SignIn)
+
+	router.HandleFunc("/sign-up", h.SignUpPage).Methods("GET")
+	router.HandleFunc("/sign-in", h.SignInPage).Methods("GET")
+
+	router.HandleFunc("/sign-up", h.SignUp).Methods("POST")
+	router.HandleFunc("/sign-in", h.SignIn).Methods("POST")
+
 	app := router.PathPrefix("/app/").Subrouter()
 	app.Use(h.identifyUser)
-	app.HandleFunc("/resource", h.MyFilesHandler)
-	app.HandleFunc("/img", h.ImageStorageHandler)
-	app.HandleFunc("/add-img", h.ImageUploadHandler)
+	app.HandleFunc("/my-images", h.MyFilesHandler).Methods("GET")
+	app.HandleFunc("/my-images/{img}", h.GetImage).Methods("GET")
+	app.HandleFunc("/upload", h.ImageUploadHandler).Methods("POST")
+
+
+	app.HandleFunc("/upload", h.ImageUploadPage).Methods("GET")
 
 	return router
 }
