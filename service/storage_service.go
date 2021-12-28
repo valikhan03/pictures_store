@@ -1,10 +1,8 @@
 package service
 
 import (
-	"io"
-	"log"
+
 	"mime/multipart"
-	"os"
 	"picturestore/repository"
 )
 
@@ -24,22 +22,15 @@ func (u *StorageService) NewUserBucket(user_id string) error {
 }
 
 func (u *StorageService) UploadFile(userid string, filename string, file multipart.File, size int64) error {
-	dst, err := os.Create("img_storage/" + filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer dst.Close()
-
-	if _, err := io.Copy(dst, file); err != nil {
-		log.Fatal(err)
-	}
-
-	err = u.repos.UploadOne(userid, filename, file, size)
-
+	err := u.repos.UploadOne(userid, filename, file, size)
 	return err
 }
 
 func (s *StorageService) GetFile(user_id string, filename string) ([]byte, error){
 	filedata, err := s.repos.GetFile(user_id, filename)
 	return filedata, err
+}
+
+func (s *StorageService) GetAllFilesList(user_id string){
+	s.repos.GetAllFilesList(user_id)
 }

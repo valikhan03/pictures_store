@@ -1,1 +1,2 @@
-.env
+postgres.env
+minio.env

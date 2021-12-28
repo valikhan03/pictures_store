@@ -17,6 +17,7 @@ type Storage interface {
 	GetFile(user_id, filename string) ([]byte, error)
 	UploadOne(user_id string, filename string, file io.Reader, size int64) error
 	MakeBucket(user_id string) error
+	GetAllFilesList(user_id string)
 }
 
 type Repository struct {

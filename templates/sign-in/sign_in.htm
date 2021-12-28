@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-In</title>
+</head>
+<body>
+    <form>
+        <label for="email">Email: </label> <br>
+        <input type="text" id="email" name="email"> <br>
+
+        <label for="password">Password: </label> <br>
+        <input type="text" id="password" name="password"> <br>
+
+        <input type="button" value="Sign in" onclick="SignIn()"> 
+    </form>
+
+
+    <script>
+        var url = "http://localhost:8090/sign-in";
+
+        var emailDocObj = document.getElementById("email");
+        var passwordDocObj = document.getElementById("password");
+
+        function SignIn(){
+            var userData = {
+                "email":emailDocObj.value,
+                "password":passwordDocObj.value
+            };
+
+            fetch(url, {
+                method: "POST", 
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(userData)
+            })
+            .catch(function (error){
+                console.error("post-req error: ", error)
+            });
+        }
+    </script>
+</body>
+</html>

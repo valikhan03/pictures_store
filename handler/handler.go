@@ -7,7 +7,7 @@ import (
 )
 
 type Handler struct {
-	service      *service.Service
+	service *service.Service
 }
 
 func NewHandler(service *service.Service) *Handler {
@@ -27,10 +27,9 @@ func (h *Handler) InitRoutes() *mux.Router {
 
 	app := router.PathPrefix("/app/").Subrouter()
 	app.Use(h.identifyUser)
-	app.HandleFunc("/my-images", h.MyFilesHandler).Methods("GET")
 	app.HandleFunc("/my-images/{img}", h.GetImage).Methods("GET")
 	app.HandleFunc("/upload", h.ImageUploadHandler).Methods("POST")
-
+	app.HandleFunc("/my-files", h.GetAllFilesList).Methods("GET")
 
 	app.HandleFunc("/upload", h.ImageUploadPage).Methods("GET")
 

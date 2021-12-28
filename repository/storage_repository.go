@@ -20,7 +20,7 @@ func NewStorageRepository(cl *minio.Client) *StorageRepository {
 }
 
 func (s *StorageRepository) MakeBucket(user_id string) error {
-	err := s.Client.MakeBucket(context.Background(), user_id, minio.MakeBucketOptions{ObjectLocking: true})
+	err := s.Client.MakeBucket(context.Background(), user_id, minio.MakeBucketOptions{ObjectLocking: false})
 	return err
 }
 
@@ -38,9 +38,17 @@ func (s *StorageRepository) GetFile(user_id, filename string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	data, err := ioutil.ReadAll(object)
+	imgbyte, err := ioutil.ReadAll(object)
 	if err != nil {
 		return nil, err
 	}
-	return data, nil
+	return imgbyte, nil
+}
+
+func (s *StorageRepository) GetAllFilesList(user_id string) {
+	//var data [][]byte
+	for objectInfo := range s.Client.ListObjects(context.Background(), user_id, minio.ListObjectsOptions{Recursive: true}) {
+		fmt.Printf("objectInfo: %v\n", objectInfo)
+		fmt.Printf("objectInfo: %v\n", objectInfo.Key)
+	}
 }

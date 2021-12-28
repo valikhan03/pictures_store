@@ -17,7 +17,7 @@ type MinIOConfigs struct {
 }
 
 func NewMinIOStorage() *minio.Client {
-	err := godotenv.Load()
+	err := godotenv.Load("minio.env")
 	if err != nil {
 		log.Printf("Error loading .env file : %s", err.Error())
 	}

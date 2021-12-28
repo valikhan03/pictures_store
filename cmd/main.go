@@ -20,7 +20,7 @@ func main() {
 	}
 	minio_client := repository.NewMinIOStorage()
 	if err != nil{
-		log.Fatal(err)
+		log.Fatalf("MinIO client conn error - %s", err.Error())
 	}
 	
 	repositories := repository.NewRepository(db, minio_client)

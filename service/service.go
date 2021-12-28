@@ -17,6 +17,7 @@ type Storage interface{
 	UploadFile(userid string, filename string, file multipart.File, size int64) error
 	NewUserBucket(user_id string) error 
 	GetFile(user_id string, filename string) ([]byte, error)
+	GetAllFilesList(user_id string)
 }
 
 type Service struct{

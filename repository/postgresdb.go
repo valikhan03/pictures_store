@@ -45,7 +45,7 @@ func GetPostgresDBConfigs() PostgresDBConfigs {
 func NewPostgresDB() (*sqlx.DB, error) {
 	var confs PostgresDBConfigs
 
-	err := godotenv.Load()
+	err := godotenv.Load("postgres.env")
 	if err != nil{
 		log.Printf("Error loading .env file : %s", err.Error())
 	}

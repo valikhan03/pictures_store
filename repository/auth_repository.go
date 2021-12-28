@@ -18,7 +18,7 @@ func NewAuthRepository(db *sqlx.DB) *AuthRepository {
 }
 
 func (a *AuthRepository) NewUser(userdata entity.User) error {
-	_, err := a.DB.Exec("insert into userstest (user_id, email, username, password) values ($1, $2, $3, $4)",
+	_, err := a.DB.Exec("insert into users (id, email, username, password) values ($1, $2, $3, $4)",
 		userdata.UserID, userdata.Email, userdata.Username, userdata.Password)
 	if err != nil {
 		log.Fatal(err)
@@ -28,7 +28,7 @@ func (a *AuthRepository) NewUser(userdata entity.User) error {
 
 func (a *AuthRepository) FindUser(userdata entity.SignInInput) (entity.User, error) {
 	var user entity.User
-	query := "select * from userstest where email=$1 and password=$2"
+	query := "select * from users where email=$1 and password=$2"
 
 	err := a.DB.Get(&user, query, userdata.Email, userdata.Password)
 	if err != nil {
