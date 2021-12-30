@@ -15,9 +15,9 @@
         <input type="text" id="username" name="username"> <br>
 
         <label for="password">Password: </label> <br>
-        <input type="text" id="password" name="password"> <br>
+        <input type="password" id="password" name="password"> <br>
 
-        <input type="button" value="Sign in" onclick="SignUp()"> 
+        <input type="button" value="Sign up" onclick="SignUp()"> 
     </form>
 
 
@@ -35,14 +35,17 @@
                 "password":passwordDocObj.value
             };
 
+            document.getElementById("sign-up-form").reset();
+
             fetch(url, {
                 method: "POST", 
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(userData)
             })
             .then((response) => {
-                alert(response.json())
-                document.getElementById("sign-up-form").reset();
+                if(response.ok){
+                    alert("Successfully signed up!")
+                }
             })
             .catch(function (error){
                 console.error("post-req error: ", error)
