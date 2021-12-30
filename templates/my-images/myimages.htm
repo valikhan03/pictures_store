@@ -6,25 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<body>
+<body onload="getImagesList()">
     <h1>My Files</h1>
-    <br>
-    <input type="button" value="GET" onclick="getImagesList()">
+    <div id="data">
+
+    </div>
+    
 
     <script>
+        var dataField = document.getElementById("data");
         var url = "http://localhost:8090/api/images-list"
         function getImagesList(){
             fetch(url, {
                 method: "GET"
             })
-            .then((response) => {
-                var data = response.text();
-                alert(data);
+            .then((response) =>{
+                if(response.ok){
+                    response.json()
+                    .then(function(obj){
+                        console.log(obj)
+                        for(var i=0; i<obj["payload"].length; i++){
+                            console.log(obj["payload"][i])
+                            dataField.innerHTML += '<a href="' + 'http://localhost:8090/api/my-images/' + obj["payload"][i] + '">' + obj["payload"][i] + '</a>' + '<br/>'
+                        } 
+                    })
+                }
             })
             .catch((err)=>{
                 console.error(err)
             })
         }
+
+        
     </script>
 </body>
 </html>

@@ -45,10 +45,10 @@ func (s *StorageRepository) GetFile(user_id, filename string) ([]byte, error) {
 	return imgbyte, nil
 }
 
-func (s *StorageRepository) GetAllFilesList(user_id string) {
-	//var data [][]byte
+func (s *StorageRepository) GetAllFilesList(user_id string) []string{
+	var data []string
 	for objectInfo := range s.Client.ListObjects(context.Background(), user_id, minio.ListObjectsOptions{Recursive: true}) {
-		fmt.Printf("objectInfo: %v\n", objectInfo)
-		fmt.Printf("objectInfo: %v\n", objectInfo.Key)
+		data = append(data, objectInfo.Key)
 	}
+	return data
 }

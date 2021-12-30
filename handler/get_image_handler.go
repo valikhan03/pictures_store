@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"fmt"
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -19,6 +19,8 @@ func (h *Handler) GetImage(resW http.ResponseWriter, req *http.Request) {
 		log.Println(err)
 	}
 	filename := mux.Vars(req)["img"]
+
+
 	imgFile, err := h.service.GetFile(userID, filename)
 	if err != nil {
 		log.Println(err)
@@ -28,6 +30,11 @@ func (h *Handler) GetImage(resW http.ResponseWriter, req *http.Request) {
 
 	resW.Write(imgFile)
 }
+
+type FilesList struct{
+	Payload []string `json:"payload"`
+}
+
 
 func (h *Handler) GetAllFilesList(resW http.ResponseWriter, req *http.Request) {
 
@@ -45,7 +52,19 @@ func (h *Handler) GetAllFilesList(resW http.ResponseWriter, req *http.Request) {
 		log.Println(err)
 	}
 
-	fmt.Printf("user [%s] - GET all files req", userID)
+	results := h.service.GetAllFilesList(userID)
 
-	h.service.GetAllFilesList(userID)	
+	if len(results) == 0{
+		resW.Write([]byte("EMPTY"))
+		return
+	}
+
+	filesList := &FilesList{
+		Payload: results,
+	}
+
+	filesListJSON, err := json.Marshal(filesList)
+	
+	resW.Header().Add("Content-Type", "application/json")
+	resW.Write(filesListJSON)
 }

@@ -31,6 +31,7 @@ func (s *StorageService) GetFile(user_id string, filename string) ([]byte, error
 	return filedata, err
 }
 
-func (s *StorageService) GetAllFilesList(user_id string){
-	s.repos.GetAllFilesList(user_id)
+func (s *StorageService) GetAllFilesList(user_id string) []string {
+	data := s.repos.GetAllFilesList(user_id)
+	return data
 }
