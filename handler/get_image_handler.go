@@ -1,12 +1,11 @@
 package handler
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
-
-	"html/template"
 )
 
 func (h *Handler) GetImage(resW http.ResponseWriter, req *http.Request) {
@@ -32,31 +31,21 @@ func (h *Handler) GetImage(resW http.ResponseWriter, req *http.Request) {
 
 func (h *Handler) GetAllFilesList(resW http.ResponseWriter, req *http.Request) {
 
-	var file = "templates/my-images/myimages.htm"
-	tmp, err := template.ParseFiles(file)
-	if err != nil {
-		log.Println(err)
-		resW.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	cookies := req.Cookies()
+	var tokenCookie *http.Cookie
 
-	cookie, err := req.Cookie("access_token")
-	if err != nil {
-		log.Println(err)
-	}
+		for _, cookie := range cookies{
+			if(cookie.Name == "access-token"){
+				tokenCookie = cookie
+			}
+		}
 
-	userID, err := h.service.ParseToken(cookie.Value)
+	userID, err := h.service.ParseToken(tokenCookie.Value)
 	if err != nil {
 		log.Println(err)
 	}
 
-	h.service.GetAllFilesList(userID)
+	fmt.Printf("user [%s] - GET all files req", userID)
 
-
-	err = tmp.Execute(resW, nil)
-	if err != nil {
-		log.Println(err)
-		resW.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	h.service.GetAllFilesList(userID)	
 }

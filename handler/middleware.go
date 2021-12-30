@@ -18,7 +18,13 @@ func (h *Handler) identifyUser(next http.Handler) http.Handler{
 			}
 		}
 
-		tokenStr := tokenCookie.Value
+		var tokenStr string
+
+		if tokenCookie != nil{
+			tokenStr = tokenCookie.Value
+		}
+		
+		
 
 		if len(tokenStr) == 0{
 			resW.WriteHeader(http.StatusUnauthorized)

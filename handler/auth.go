@@ -74,6 +74,9 @@ func (h *Handler) SignIn(resW http.ResponseWriter, req *http.Request){
 	var userdata entity.SignInInput
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&userdata)
+
+	fmt.Println("SIGN IN: ", userdata)
+
 	if err != nil{
 		log.Fatal(err)
 	}
@@ -88,7 +91,7 @@ func (h *Handler) SignIn(resW http.ResponseWriter, req *http.Request){
 	cookie := http.Cookie{
 		Name: "access-token",
 		Value: token,
-		Path: "/app",
+		Path: "/",
 	}
 
 	http.SetCookie(resW, &cookie)

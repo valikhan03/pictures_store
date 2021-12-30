@@ -8,5 +8,23 @@
 </head>
 <body>
     <h1>My Files</h1>
+    <br>
+    <input type="button" value="GET" onclick="getImagesList()">
+
+    <script>
+        var url = "http://localhost:8090/api/images-list"
+        function getImagesList(){
+            fetch(url, {
+                method: "GET"
+            })
+            .then((response) => {
+                var data = response.text();
+                alert(data);
+            })
+            .catch((err)=>{
+                console.error(err)
+            })
+        }
+    </script>
 </body>
 </html>

@@ -25,12 +25,15 @@ func (h *Handler) InitRoutes() *mux.Router {
 	router.HandleFunc("/sign-up", h.SignUp).Methods("POST")
 	router.HandleFunc("/sign-in", h.SignIn).Methods("POST")
 
+	api := router.PathPrefix("/api/").Subrouter()
+	api.Use(h.identifyUser)
+	api.HandleFunc("/my-images/{img}", h.GetImage).Methods("GET")
+	api.HandleFunc("/upload", h.ImageUploadHandler).Methods("POST")
+	api.HandleFunc("/images-list", h.GetAllFilesList).Methods("GET")
+
 	app := router.PathPrefix("/app/").Subrouter()
 	app.Use(h.identifyUser)
-	app.HandleFunc("/my-images/{img}", h.GetImage).Methods("GET")
-	app.HandleFunc("/upload", h.ImageUploadHandler).Methods("POST")
-	app.HandleFunc("/my-files", h.GetAllFilesList).Methods("GET")
-
+	app.HandleFunc("/my-images", h.MyFilesPage)
 	app.HandleFunc("/upload", h.ImageUploadPage).Methods("GET")
 
 	return router

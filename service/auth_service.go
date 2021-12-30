@@ -56,6 +56,9 @@ func (a *AuthService) SignUp(userdata entity.User) (string, error) {
 func (a *AuthService) GenerateToken(userdata entity.SignInInput) (string, error) {
 	var err error
 	userdata.Password = hashPassword(userdata.Password)
+
+	fmt.Println("GENERATING TOKEN: ", userdata)
+
 	if err != nil{
 		log.Fatal(err)
 	} 
