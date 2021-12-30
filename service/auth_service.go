@@ -1,14 +1,18 @@
 package service
 
 import (
+	"crypto/sha512"
 	"errors"
+	"fmt"
 	"log"
+	"os"
 	"picturestore/entity"
 	"picturestore/repository"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
+	"github.com/joho/godotenv"
 )
 
 type AuthService struct {
@@ -23,7 +27,6 @@ func NewAuthService(repos repository.Auth) *AuthService {
 
 const (
 	tokenET = 60 * time.Minute //token expiration time
-	key     = "vfdnjkvbhzjlkj"
 )
 
 type tokenClaims struct {
@@ -38,6 +41,11 @@ func (a *AuthService) SignUp(userdata entity.User) (string, error) {
 		return "", err
 	}
 	userdata.UserID = id.String()
+
+	userdata.Password = hashPassword(userdata.Password)
+	if err != nil{
+		log.Fatal(err)
+	}
 	err = a.repos.NewUser(userdata)
 	if err != nil {
 		log.Fatal(err)
@@ -46,6 +54,12 @@ func (a *AuthService) SignUp(userdata entity.User) (string, error) {
 }
 
 func (a *AuthService) GenerateToken(userdata entity.SignInInput) (string, error) {
+	var err error
+	userdata.Password = hashPassword(userdata.Password)
+	if err != nil{
+		log.Fatal(err)
+	} 
+	
 	user, err := a.repos.FindUser(userdata)
 	if err != nil {
 		log.Fatal(err)
@@ -59,6 +73,9 @@ func (a *AuthService) GenerateToken(userdata entity.SignInInput) (string, error)
 		user.UserID,
 	})
 
+	godotenv.Load("keys.env")
+	key := os.Getenv("TOKEN_KEY")
+
 	tokenStr, err := token.SignedString([]byte(key))
 	if err != nil {
 		log.Fatal("KEY ERROR", err)
@@ -71,6 +88,10 @@ func (a *AuthService) ParseToken(access_token string) (string, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("Invalid signing method")
 		}
+
+		godotenv.Load("keys.env")
+		key := os.Getenv("TOKEN_KEY")
+
 		return []byte(key), nil
 	})
 
@@ -84,4 +105,16 @@ func (a *AuthService) ParseToken(access_token string) (string, error) {
 	}
 
 	return cliams.UserID, nil
+}
+
+
+func hashPassword(password string) string{
+	godotenv.Load("keys.env")
+	salt := os.Getenv("SALT")
+	pwd := sha512.New()
+	pwd.Write([]byte(password))
+	pwd.Write([]byte(salt))
+	password = fmt.Sprintf("%x", pwd.Sum(nil))
+
+	return password
 }

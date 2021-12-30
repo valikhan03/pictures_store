@@ -1,2 +1,3 @@
 postgres.env
 minio.env
+keys.env
