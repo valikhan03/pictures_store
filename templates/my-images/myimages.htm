@@ -8,27 +8,37 @@
 </head>
 <body onload="getImagesList()">
     <h1>My Files</h1>
-    <div id="data">
+    <div>
+        <h2 id="images-quantity"></h2>
+    </div>
+    <div id="images-list">
 
     </div>
     
 
     <script>
-        var dataField = document.getElementById("data");
         var url = "http://localhost:8090/api/images-list"
         function getImagesList(){
             fetch(url, {
-                method: "GET"
+                method: "GET",
+                headers : { 
+                    'Accept': 'application/json, */*'
+                }
             })
             .then((response) =>{
                 if(response.ok){
                     response.json()
                     .then(function(obj){
-                        console.log(obj)
-                        for(var i=0; i<obj["payload"].length; i++){
-                            console.log(obj["payload"][i])
-                            dataField.innerHTML += '<a href="' + 'http://localhost:8090/api/my-images/' + obj["payload"][i] + '">' + obj["payload"][i] + '</a>' + '<br/>'
-                        } 
+
+                        if(obj["payload"].length == 0){
+                            document.getElementById("images-quantity").innerHTML = '0 FILES'
+                        }else if(obj["payload"].length > 0){
+                            document.getElementById("images-quantity").innerHTML = (obj["payload"].length + ' FILES');
+                            for(var i=0; i<obj["payload"].length; i++){
+                                document.getElementById("images-list").innerHTML += '<a href="' + 'http://localhost:8090/api/my-images/' + obj["payload"][i] + '">' + obj["payload"][i] + '</a>' + '<br/>'
+                            }
+                        }
+
                     })
                 }
             })
